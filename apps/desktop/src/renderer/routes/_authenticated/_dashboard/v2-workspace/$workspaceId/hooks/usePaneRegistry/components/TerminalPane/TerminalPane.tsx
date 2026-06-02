@@ -335,6 +335,15 @@ export function TerminalPane({
 		preventDefault: true,
 	});
 
+	// setActivePane only updates the visual highlight; focus the xterm so
+	// keyboard input follows the active pane.
+	useEffect(() => {
+		if (!ctx.isActive) return;
+		terminalRuntimeRegistry
+			.getTerminal(terminalId, terminalInstanceId)
+			?.focus();
+	}, [ctx.isActive, terminalId, terminalInstanceId]);
+
 	// connectionState in deps ensures terminal ref re-derives after connect/disconnect
 	// biome-ignore lint/correctness/useExhaustiveDependencies: connectionState is intentionally included to trigger re-derive
 	const terminal = useMemo(
